@@ -1,6 +1,6 @@
 {
   "name": "apybird",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Generate API Blueprint from decorators",
   "main": "src/index.ts",
   "license": "MIT",
