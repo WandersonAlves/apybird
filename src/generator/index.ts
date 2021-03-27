@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { writeFileSync } from 'fs';
 import BlueprintFragment from '../fragment';
 import { DescribeAPIParams, GroupedByPath } from '../interfaces';

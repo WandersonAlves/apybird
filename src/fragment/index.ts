@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { GroupedByPath, Keys } from '../interfaces';
 
 interface BlueprintFragmentRequest {
