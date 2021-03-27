@@ -1,6 +1,4 @@
-import { GenerateAPIBlueprint } from '.';
-import { DescribeRequest } from './decorators';
-
+import { GenerateAPIBlueprint, DescribeRequest } from '.';
 @DescribeRequest({
   group: 'Things',
   method: 'GET',
