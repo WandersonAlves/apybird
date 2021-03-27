@@ -1,0 +1,18 @@
+{
+  "name": "apybird",
+  "version": "0.0.1",
+  "description": "Generate API Blueprint from decorators",
+  "main": "src/index.ts",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^14.14.37",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.3"
+  },
+  "dependencies": {
+    "reflect-metadata": "^0.1.13"
+  },
+  "scripts": {
+    "build": "tsc"
+  }
+}
