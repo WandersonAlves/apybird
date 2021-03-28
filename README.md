@@ -1,6 +1,10 @@
-# apybird
+# apybird :bird:
 
-Build API Blueprint file (.apib) from decorators!
+Build API Blueprint file (.apib) from decorators! Simple and easy
+
+## Motivation
+
+I haven't found a decorator solution to build a API Blueprint spec. So a decide do make one myself. The filosophy is to use generics to ensure always up to date documentation about headers, body and response. So when data needs to change, you change your interface, and TypeScript will show a error telling you about the change, so you'll update your docs always as needed because your build will break if you not do.
 
 ## Usage
 
@@ -8,7 +12,8 @@ Build API Blueprint file (.apib) from decorators!
 2. Decorate your class like this:
 
 ```typescript
-@DescribeRequest({
+// Without the generics, TypeScript will not tell you to update your doc :D
+@DescribeRequest<HeaderInterface, BodyInterface, ResponseInterface>({
   group: 'Things',
   method: 'DELETE',
   name: 'Remove a thing',
@@ -104,3 +109,10 @@ Best DOC!!!!
   "data": []
 }
 ```
+
+## TODO
+
+- Unit tests
+- Documentation on code and better markdown docs
+- Nice logo?
+- Cover more api blueprint syntax
