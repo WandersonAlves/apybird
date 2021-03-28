@@ -1,3 +1,7 @@
+![logo](https://github.com/apiaryio/api-blueprint/raw/master/assets/logo_apiblueprint.png)
+
+<sub>API Blueprint logo</sub>
+
 # apybird :bird:
 
 Build API Blueprint file (.apib) from decorators! Simple and easy
