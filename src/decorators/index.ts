@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { DescribeRequestParams } from '../interfaces';
 
-export const DescribeRequest = <H, B, R>({
+export const DescribeRequest = <H = unknown, B = unknown, R = unknown>({
   group,
   path,
   method,
