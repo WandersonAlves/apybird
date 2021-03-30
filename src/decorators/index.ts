@@ -11,7 +11,7 @@ export const DescribeRequest = <H = unknown, B = unknown, R = unknown>({
   name,
   requestGroup,
 }: DescribeRequestParams<H, B, R>) => {
-  return (target: new () => any) => {
+  return (target: any) => {
     Reflect.defineMetadata('Group', group, target);
     Reflect.defineMetadata('Path', path, target);
     Reflect.defineMetadata('Method', method, target);

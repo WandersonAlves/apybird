@@ -12,7 +12,11 @@ import { GenerateAPIBlueprint, DescribeRequest } from '.';
     data: [],
   },
 })
-class EndpointA {}
+class EndpointA {
+  static random() {
+    return true
+  }
+}
 
 @DescribeRequest({
   group: 'Things',
