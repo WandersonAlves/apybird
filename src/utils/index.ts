@@ -1,0 +1,1 @@
+export const jsonString = (obj: any) => `${JSON.stringify(obj, null, 2)}\n`;

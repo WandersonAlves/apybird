@@ -1,18 +1,17 @@
 import 'reflect-metadata';
 import { GroupedByPath, Keys } from '../interfaces';
+import { jsonString } from '../utils';
 
 interface BlueprintFragmentRequest {
   method: string;
   name: string;
-  body: Keys;
-  headers: Keys;
+  body?: Keys;
+  headers?: Keys;
   response?: Keys;
   responses?: {
     [k: number]: any;
   }
 }
-
-const jsonString = (obj: any) => `${JSON.stringify(obj, null, 2)}\n`;
 
 export default class BlueprintFragment {
   static apiName(name: string, description: string) {
