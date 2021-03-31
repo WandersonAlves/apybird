@@ -6,7 +6,10 @@ interface BlueprintFragmentRequest {
   name: string;
   body: Keys;
   headers: Keys;
-  response: Keys;
+  response?: Keys;
+  responses?: {
+    [k: number]: any;
+  }
 }
 
 const jsonString = (obj: any) => `${JSON.stringify(obj, null, 2)}\n`;
@@ -26,8 +29,8 @@ export default class BlueprintFragment {
         const { requestGroup } = BlueprintFragment.getMeta(_requestTargets[0]);
         str += `## ${requestGroup} [${pathName}]\n`;
         _requestTargets.forEach(_reqTarget => {
-          const { method, name, body, headers, response } = BlueprintFragment.getMeta(_reqTarget);
-          const build = BlueprintFragment.request({ response, headers, body, name, method });
+          const { method, name, body, headers, response, responses } = BlueprintFragment.getMeta(_reqTarget);
+          const build = BlueprintFragment.request({ response, headers, body, name, method, responses });
           str += build;
         });
       });
@@ -44,6 +47,7 @@ export default class BlueprintFragment {
     const headers: Keys = Reflect.getMetadata('Headers', target);
     const response: Keys = Reflect.getMetadata('Response', target);
     const requestGroup: string = Reflect.getMetadata('RequestGroup', target);
+    const responses: string = Reflect.getMetadata('Responses', target);
 
     return {
       group,
@@ -54,10 +58,11 @@ export default class BlueprintFragment {
       headers,
       response,
       requestGroup,
+      responses,
     };
   }
 
-  private static request({ method, name, body, headers, response }: BlueprintFragmentRequest) {
+  private static request({ method, name, body, headers, response, responses }: BlueprintFragmentRequest) {
     let requestFragment = '';
     requestFragment += `### ${method} ${name} [${method}]\n`;
     requestFragment += '+ Request (application/json)\n';
@@ -71,9 +76,18 @@ export default class BlueprintFragment {
         .map(([key, value]) => ` ${key}:${value}`)
         .join('\n')}\n`;
     }
-    if (response) {
+    if (response && !responses) {
       requestFragment += '+ Response 200 (application/json)';
       requestFragment += `\n${jsonString(response)}`;
+    }
+    else if (responses) {
+      Object.entries(responses).forEach(([statusCode, resp]) => {
+        requestFragment += `+ Response ${statusCode} (application/json)`;
+        requestFragment += `\n${jsonString(resp)}`;
+      })
+    }
+    else {
+      throw new Error('Neither "response" or "responses" object provided');
     }
     return requestFragment;
   }
