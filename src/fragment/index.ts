@@ -30,7 +30,7 @@ export default class BlueprintFragment {
         str += `## ${requestGroup} [${pathName}]\n`;
         _requestTargets.forEach(_reqTarget => {
           const { method, name, body, headers, response, responses } = BlueprintFragment.getMeta(_reqTarget);
-          const build = BlueprintFragment.request({ response, headers, body, name, method, responses });
+          const build = BlueprintFragment.request({ response, headers, body, name, method, responses }, _reqTarget.name);
           str += build;
         });
       });
@@ -62,7 +62,7 @@ export default class BlueprintFragment {
     };
   }
 
-  private static request({ method, name, body, headers, response, responses }: BlueprintFragmentRequest) {
+  private static request({ method, name, body, headers, response, responses }: BlueprintFragmentRequest, className: string) {
     let requestFragment = '';
     requestFragment += `### ${method} ${name} [${method}]\n`;
     requestFragment += '+ Request (application/json)\n';
@@ -87,7 +87,7 @@ export default class BlueprintFragment {
       })
     }
     else {
-      throw new Error('Neither "response" or "responses" object provided');
+      throw new Error(`Neither "response" or "responses" object provided into ${className} class`);
     }
     return requestFragment;
   }
