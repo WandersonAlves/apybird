@@ -6,17 +6,24 @@ import { GenerateAPIBlueprint, DescribeRequest } from '.';
   path: '/v1/things',
   requestGroup: 'VariousThings',
   headers: {
-    'x-random': 'srtring',
+    'x-random': 'string',
   },
   response: {
     data: [],
   },
+  responses: {
+    200: {
+      status: 'OK',
+    },
+    400: {
+      status: 'NOT OK DUDE',
+    },
+    500: {
+      status: 'DEFINITIVELY NOT OK',
+    },
+  },
 })
-class EndpointA {
-  static random() {
-    return true
-  }
-}
+class EndpointA {}
 
 @DescribeRequest({
   group: 'Things',
@@ -25,7 +32,7 @@ class EndpointA {
   path: '/v1/things',
   requestGroup: 'VariousThings',
   headers: {
-    'x-random': 'srtring',
+    'x-random': 'string',
   },
   response: {
     data: [],
@@ -40,7 +47,7 @@ class EndpointB {}
   path: '/v1/auth/login',
   requestGroup: 'Login',
   headers: {
-    'x-random': 'srtring',
+    'x-random': 'string',
   },
   response: {
     data: [],
@@ -55,7 +62,7 @@ class EndpointC {}
   path: '/v1/auth/renew-token',
   requestGroup: 'RenewToken',
   headers: {
-    'x-random': 'srtring',
+    'x-random': 'string',
   },
   response: {
     data: [],
@@ -70,7 +77,7 @@ class EndpointD {}
   path: '/v1/misc/',
   requestGroup: 'RandomReq',
   headers: {
-    'x-random': 'srtring',
+    'x-random': 'string',
   },
   response: {
     data: [],
