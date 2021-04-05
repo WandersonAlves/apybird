@@ -1,5 +1,6 @@
 import { expect } from "chai";
 import { DescribeRequest } from "../src"
+import ClassRegister from "../src/decorators/register";
 
 class TestSubject {}
 class TestSubject2 {}
@@ -79,5 +80,11 @@ describe('Decorators', () => {
     expect(Reflect.getMetadata('Headers', TestSubject2)).deep.equals({
       'x-random': 'string',
     });
+  })
+
+  it('Should get all decorated classes', () => {
+    const classes = ClassRegister.getAll();
+
+    expect(classes).length(2);
   })
 })

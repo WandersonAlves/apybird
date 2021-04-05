@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import { DescribeRequestParams } from '../interfaces';
+import ClassRegister from './register';
 
 /**
  * Decorate a class with api blueprint information
@@ -19,6 +20,7 @@ export const DescribeRequest = <H = unknown, B = unknown, R = unknown>({
   responses,
 }: DescribeRequestParams<H, B, R>) => {
   return (target: any) => {
+    ClassRegister.addClass(target);
     Reflect.defineMetadata('Group', group, target);
     Reflect.defineMetadata('Path', path, target);
     Reflect.defineMetadata('Method', method, target);
