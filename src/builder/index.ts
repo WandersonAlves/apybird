@@ -31,9 +31,6 @@ export const BuildApybirdDoc = (details: BuilderParams) => {
       ...ClassRegister.getAll(),
     );
     blueprint.toFile(details.filePath);
-    if (details.toString) {
-      return blueprint.toString();
-    }
-    return;
+    return blueprint.toString();
   });
 };

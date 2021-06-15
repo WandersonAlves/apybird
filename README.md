@@ -43,15 +43,6 @@ BuildApybirdDoc({
   description: 'Fancy description',
   filePath: './docs/api.apib',
 });
-
-// OR
-
-const blueprintSting = BuildApybirdDoc({
-  name: 'awesome-api',
-  description: 'Fancy description',
-  filePath: './docs/api.apib',
-  toString: true
-});
 ```
 
 4. Use your blueprint where you want
