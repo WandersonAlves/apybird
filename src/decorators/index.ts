@@ -18,6 +18,7 @@ export const DescribeRequest = <H = unknown, B = unknown, R = unknown>({
   name,
   requestGroup,
   responses,
+  description
 }: DescribeRequestParams<H, B, R>) => {
   return (target: any) => {
     ClassRegister.addClass(target);
@@ -30,6 +31,7 @@ export const DescribeRequest = <H = unknown, B = unknown, R = unknown>({
     Reflect.defineMetadata('Responses', responses, target);
     Reflect.defineMetadata('Name', name, target);
     Reflect.defineMetadata('RequestGroup', requestGroup, target);
+    Reflect.defineMetadata('Description', description, target);
     return target;
   };
 };

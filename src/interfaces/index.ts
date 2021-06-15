@@ -42,6 +42,10 @@ export interface DescribeRequestParams<H = unknown, B = unknown, R = unknown> {
   responses?: {
     [k: number]: any;
   };
+  /**
+   * Describe the endpoint
+   */
+  description?: string;
 }
 
 export interface DescribeAPIParams {

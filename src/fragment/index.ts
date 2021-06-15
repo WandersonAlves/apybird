@@ -10,7 +10,8 @@ interface BlueprintFragmentRequest {
   response?: Keys;
   responses?: {
     [k: number]: any;
-  }
+  },
+  description?: string;
 }
 
 export default class BlueprintFragment {
@@ -28,8 +29,11 @@ export default class BlueprintFragment {
         const { requestGroup } = BlueprintFragment.getMeta(_requestTargets[0]);
         str += `## ${requestGroup} [${pathName}]\n`;
         _requestTargets.forEach(_reqTarget => {
-          const { method, name, body, headers, response, responses } = BlueprintFragment.getMeta(_reqTarget);
-          const build = BlueprintFragment.request({ response, headers, body, name, method, responses }, _reqTarget.name);
+          const { method, name, body, headers, response, responses, description } = BlueprintFragment.getMeta(_reqTarget);
+          const build = BlueprintFragment.request(
+            { response, headers, body, name, method, responses, description },
+            _reqTarget.name,
+          );
           str += build;
         });
       });
@@ -47,6 +51,7 @@ export default class BlueprintFragment {
     const response: Keys = Reflect.getMetadata('Response', target);
     const requestGroup: string = Reflect.getMetadata('RequestGroup', target);
     const responses: string = Reflect.getMetadata('Responses', target);
+    const description: string = Reflect.getMetadata('Description', target);
 
     return {
       group,
@@ -58,12 +63,16 @@ export default class BlueprintFragment {
       response,
       requestGroup,
       responses,
+      description,
     };
   }
 
-  private static request({ method, name, body, headers, response, responses }: BlueprintFragmentRequest, className: string) {
+  private static request({ method, name, body, headers, response, responses, description }: BlueprintFragmentRequest, className: string) {
     let requestFragment = '';
     requestFragment += `### ${method} ${name} [${method}]\n`;
+    if (description) {
+      requestFragment += `${description}\n`
+    }
     requestFragment += '+ Request (application/json)\n';
     if (body) {
       requestFragment += '  + Body\n';

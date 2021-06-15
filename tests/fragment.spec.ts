@@ -20,6 +20,7 @@ describe('Fragments', () => {
 
   describe('RequestFragment', () => {
     it("Should build fragment with '###' and '+ Request' part", () => {
+      const description = 'Just a random description to prove that it works';
       const fragment = BlueprintFragment['request'](
         {
           method: 'GET',
@@ -27,11 +28,13 @@ describe('Fragments', () => {
           response: {
             data: [],
           },
+          description
         },
         'TestSubject',
       );
       expect(fragment).contain('### GET Testing Fragments [GET]');
       expect(fragment).contain('+ Request (application/json');
+      expect(fragment).contains(description);
     });
 
     it("Should build fragment with '+ Body' and '+ Headers' part", () => {
