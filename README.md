@@ -134,6 +134,35 @@ This leads to:
 
 You can fix this by separating the `Range` function into another file that not imports something that uses the `inversifyjs` container
 
+> Webpack build brokes after using apybird
+
+Just add `externals` to webpack:
+
+```js
+const path = require('path');
+
+module.exports = {
+  target: 'node',
+  entry: {
+    app: './dist/index.js',
+  },
+  // Add this field
+  externals: {
+    apybird: 'apybird'
+  },
+  output: {
+    path: path.resolve(__dirname, './build'),
+    filename: 'build.js',
+    libraryTarget: 'commonjs2',
+  },
+  optimization: {
+    minimize: true,
+    removeAvailableModules: true,
+    mangleExports: 'size'
+  },
+};
+```
+
 ## TODO
 
 - Unit tests
