@@ -49,6 +49,11 @@ export interface DescribeAPIParams {
   description: string;
 }
 
+export interface BuilderParams extends DescribeAPIParams {
+  filePath: string;
+  pattern?: string;
+}
+
 export interface GroupedTargets {
   [k: string]: (new () => any)[];
 }

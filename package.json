@@ -1,6 +1,6 @@
 {
   "name": "apybird",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Generate API Blueprint from decorators",
   "main": "lib/index.js",
   "license": "MIT",
@@ -14,12 +14,8 @@
     "typescript": "^4.2.3"
   },
   "files": [
-    "lib/**/*",
-    "bin/**/*"
+    "lib/**/*"
   ],
-  "bin": {
-    "apybird": "bin/apybird.ts"
-  },
   "dependencies": {
     "reflect-metadata": "^0.1.x"
   },
