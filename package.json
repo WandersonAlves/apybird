@@ -25,7 +25,6 @@
   },
   "scripts": {
     "build": "rm -rf lib && tsc",
-    "build:cli": "rm -rf bin/apybird.js && tsc --project tsconfig-bin.json",
     "test": "TS_NODE_FILES=true TS_NODE_PROJECT=./tests/tsconfig.json mocha -r ts-node/register tests/**/*.spec.ts",
     "prepublish": "yarn test && yarn build"
   }
