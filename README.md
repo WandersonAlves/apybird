@@ -104,28 +104,89 @@ Best DOC!!!!
 
 ## API
 
-`BuildApybirdDoc` accepts a param that matchs `BuilderParams`:
+### `BuildApybirdDoc (details: BuilderParams) => void`
 
-> BuilderParams.name **REQUIRED**
+`BuildApybirdDoc` accepts a parameter that matchs `BuilderParams` and is used to generate the API Blueprint file.
+
+#### name - `string` (**REQUIRED**)
+
 The name of your API
 
-> BuilderParams.description **REQUIRED**
+#### description - `string` (**REQUIRED**)
+
 Some description for your API
 
-> BuilderParams.filePath **REQUIRED**
+#### filePath - `string` (**REQUIRED**)
+
 Where should `apybird` place your documentation
 
-> BuilderParams.pattern **OPTIONAL**
-Change the default pattern ('*Case.ts') to something else
+#### pattern - `string` (**OPTIONAL**)
+
+Change the default pattern (*Case.ts) to something else. The command that will use this is `find . -name '${details.pattern || '*Case.ts'}'` and can be found on `src/builder/index.ts`.
 
 ```typescript
 BuildApybirdDoc({
   name: 'awesome-api',
   description: 'Fancy description',
   filePath: './docs/api.apib',
-  pattern: '*Case.ts'
+  pattern: '*Case.ts',
 });
 ```
+
+### `DescribeRequest<H,B,R>(params: DescribeRequestParams<H,B,R>) => void`
+
+The `DescribeRequest` decorator is responsable for adding metadata to your class and later be used by `BuildApybirdDoc`.
+
+#### group - `string` (**REQUIRED**)
+
+Group of request. Translates to `# Group <value>`
+
+#### path - `string` (**REQUIRED**)
+
+Path of request. Translates to `## VariousThings [<value>]`
+
+#### method - `string` (**REQUIRED**)
+
+Method of the request. Translates to `### <value> Get Various Things [<value>]`
+
+#### name - `string` (**REQUIRED**)
+
+Name of the request. Translates to `### GET <value> [GET]`
+
+#### requestGroup - `string`(**REQUIRED**)
+
+Group of request in case multiple methods points to the same route. Translates to `## <value> [/v1/things]`
+
+#### headers - `[k: string]: string` (**OPTIONAL**)
+
+A object that represents the headers of the endpoint. Uses the `H` generic
+
+#### body - `[k: string]: any` (**OPTIONAL**)
+
+A object that represents the body of the endpoint. Uses the `B` generic
+
+#### response - `any` (**OPTIONAL**)
+
+The default 200 response. If you use `responses`, it'll be used instead of this. Uses the `R` generic
+
+#### responses - `[k: number]: any` (**OPTIONAL**)
+
+Responses object. The keys of the object are the status code
+
+```js
+{
+  200: {
+    status: 'OK'
+  }
+  500: {
+    status: 'NOT OK'
+  }
+}
+```
+
+#### description: `string` (**OPTIONAL**)
+
+Describe the endpoint
 
 ## Know Issues
 
@@ -155,7 +216,7 @@ export const Range = (start: number, end: number) => Array.from({ length: end - 
 ```
 
 This leads to:
-```(node:91013) UnhandledPromiseRejectionWarning: Error: @inject called with undefined this could mean that the class undefined has a circular dependency problem. You can use a LazyServiceIdentifer to  overcome this limitation.```
+`(node:91013) UnhandledPromiseRejectionWarning: Error: @inject called with undefined this could mean that the class undefined has a circular dependency problem. You can use a LazyServiceIdentifer to overcome this limitation.`
 
 You can fix this by separating the `Range` function into another file that not imports something that uses the `inversifyjs` container
 
@@ -173,7 +234,7 @@ module.exports = {
   },
   // Add this field
   externals: {
-    apybird: 'apybird'
+    apybird: 'apybird',
   },
   output: {
     path: path.resolve(__dirname, './build'),
@@ -183,14 +244,14 @@ module.exports = {
   optimization: {
     minimize: true,
     removeAvailableModules: true,
-    mangleExports: 'size'
+    mangleExports: 'size',
   },
 };
 ```
 
 ## TODO
 
-- Unit tests
-- Documentation on code and better markdown docs
-- Nice logo?
-- Cover more api blueprint syntax
+- [X] Unit tests
+- [ ] Documentation on code and better markdown docs
+- [ ] Nice logo?
+- [ ] Cover more api blueprint syntax (query and params of a endpoint)
