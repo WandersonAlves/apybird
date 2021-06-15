@@ -13,7 +13,7 @@ export const BuildApybirdDoc = (details: BuilderParams) => {
       .split('\n')
       .forEach(_module => {
         if (_module) {
-          classes.push(import(`.${_module}`));
+          classes.push(import(`../../../../${_module}`));
         }
       });
   } catch (e) {}
