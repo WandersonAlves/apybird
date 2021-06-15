@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { execSync } from 'child_process';
 import { readFileSync } from 'fs';
-import { argv, argv0 } from 'process';
+import { argv } from 'process';
 import { ClassRegister, GenerateAPIBlueprint } from '../lib';
 
 let apybirdSpec;
@@ -14,9 +14,10 @@ catch (e) {
   process.exit(1);
 }
 
-const result = execSync(`find . -name '${argv0 || '*Case.ts'}'`);
+const result = execSync(`find . -name '${argv[2] || '*Case.ts'}'`);
 const classes = [];
 try {
+  console.info(result.toString());
   result
     .toString()
     .split('\n')
@@ -39,6 +40,6 @@ Promise.all(classes).then(_result => {
       description: apybirdSpec.description,
     },
     ...ClassRegister.getAll(),
-  ).toFile(argv[1]);
+  ).toFile(argv[3]);
   console.info('Done!');
 });
