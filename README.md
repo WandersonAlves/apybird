@@ -12,7 +12,7 @@ I haven't found a decorator solution to build a API Blueprint spec. So a decide 
 
 ## Usage
 
-1. `yarn add apybird`
+1. `yarn add apybird -D`
 2. Decorate your class like this:
 
 ```typescript
