@@ -52,6 +52,7 @@ export interface DescribeAPIParams {
 export interface BuilderParams extends DescribeAPIParams {
   filePath: string;
   pattern?: string;
+  toString?: boolean;
 }
 
 export interface GroupedTargets {

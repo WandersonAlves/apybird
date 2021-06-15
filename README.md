@@ -34,31 +34,28 @@ class EndpointB {}
 ```
 
 3. Generate your api blueprint
-```typescript
-import { GenerateAPIBlueprint } from 'apybird';
 
-GenerateAPIBlueprint(
-  { name: 'API Doc', description: 'Best DOC!!!!' },
-  EndpointA,
-  EndpointB,
-  EndpointC,
-  EndpointD,
-  EndpointE,
-).toString();
+```typescript
+import { BuildApybirdDoc } from 'apybird';
+
+BuildApybirdDoc({
+  name: 'awesome-api',
+  description: 'Fancy description',
+  filePath: './docs/api.apib',
+});
 
 // OR
 
-GenerateAPIBlueprint(
-  { name: 'API Doc', description: 'Best DOC!!!!' },
-  EndpointA,
-  EndpointB,
-  EndpointC,
-  EndpointD,
-  EndpointE,
-).toFile('<file-path>');
+const blueprintSting = BuildApybirdDoc({
+  name: 'awesome-api',
+  description: 'Fancy description',
+  filePath: './docs/api.apib',
+  toString: true
+});
 ```
 
 4. Use your blueprint where you want
+
 ```apib
 FORMAT: 1A
 
@@ -113,6 +110,38 @@ Best DOC!!!!
   "data": []
 }
 ```
+
+## Know Issues
+
+> If you're using `inversifyjs`, make sure that the classes that match the pattern used to build te docs **DON'T** import **ANY** file that uses something from `inversifyjs`.
+
+```typescript
+// SomeCase.ts matchs the default pattern "*Case.ts"
+import { Range } from '../../../../utils'; // A import with the problem
+
+@injectable()
+export default class SomeCase implements UseCase {
+  @inject(AxiosHttpHandle) private http: AxiosHttpHandle;
+  @inject(PendingPaymentsCase) private pendingPayments: PendingPaymentsCase;
+
+  @ExceptionHandler()
+  async execute({ headers }: UseCaseParams<GetOrderMgmtSummaryHeaders>) {
+    /** CODE ** /
+  }
+}
+
+/**********************************/
+// Utils.ts
+// Some code that fetchs a class from a container
+export const GenerateRoute = (obj: Newable, headerConvertion?: HeaderConvert) => ExpressRouterAdapter.adapt(GetFromContainer(obj), headerConvertion);
+// And the Range function
+export const Range = (start: number, end: number) => Array.from({ length: end - start + 1 }, (v, k) => k + start);
+```
+
+This leads to:
+```(node:91013) UnhandledPromiseRejectionWarning: Error: @inject called with undefined this could mean that the class undefined has a circular dependency problem. You can use a LazyServiceIdentifer to  overcome this limitation.```
+
+You can fix this by separating the `Range` function into another file that not imports something that uses the `inversifyjs` container
 
 ## TODO
 

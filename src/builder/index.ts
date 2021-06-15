@@ -7,7 +7,6 @@ export const BuildApybirdDoc = (details: BuilderParams) => {
   const result = execSync(`find . -name '${details.pattern || '*Case.ts'}'`);
   const classes = [];
   try {
-    console.info(result.toString());
     result
       .toString()
       .split('\n')
@@ -24,13 +23,17 @@ export const BuildApybirdDoc = (details: BuilderParams) => {
   }
 
   Promise.all(classes).then(_result => {
-    GenerateAPIBlueprint(
+    const blueprint = GenerateAPIBlueprint(
       {
         name: details.name,
         description: details.description,
       },
       ...ClassRegister.getAll(),
-    ).toFile(details.filePath);
-    console.info('Done!');
+    );
+    blueprint.toFile(details.filePath);
+    if (details.toString) {
+      return blueprint.toString();
+    }
+    return;
   });
 };
