@@ -102,9 +102,34 @@ Best DOC!!!!
 }
 ```
 
+## API
+
+`BuildApybirdDoc` accepts a param that matchs `BuilderParams`:
+
+> BuilderParams.name **REQUIRED**
+The name of your API
+
+> BuilderParams.description **REQUIRED**
+Some description for your API
+
+> BuilderParams.filePath **REQUIRED**
+Where should `apybird` place your documentation
+
+> BuilderParams.pattern **OPTIONAL**
+Change the default pattern ('*Case.ts') to something else
+
+```typescript
+BuildApybirdDoc({
+  name: 'awesome-api',
+  description: 'Fancy description',
+  filePath: './docs/api.apib',
+  pattern: '*Case.ts'
+});
+```
+
 ## Know Issues
 
-> If you're using `inversifyjs`, make sure that the classes that match the pattern used to build te docs **DON'T** import **ANY** file that uses something from `inversifyjs`.
+> If you're using `inversifyjs`, make sure that the classes that match the pattern used to build the docs **DON'T** import **ANY** file that uses something from `inversifyjs`.
 
 ```typescript
 // SomeCase.ts matchs the default pattern "*Case.ts"
