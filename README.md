@@ -36,7 +36,7 @@ class EndpointB {}
 3. Generate your api blueprint
 
 ```typescript
-import { BuildApybirdDoc } from 'apybird';
+import { BuildApybirdDoc } from 'apybird/lib/builder';
 
 BuildApybirdDoc({
   name: 'awesome-api',
