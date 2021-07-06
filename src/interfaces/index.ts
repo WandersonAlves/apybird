@@ -50,7 +50,7 @@ export interface DescribeRequestParams<H = unknown, B = unknown, R = unknown> {
 
 export interface DescribeAPIParams {
   name: string;
-  description: string;
+  description: (totalEndpoints: number, totalGroups: number) => string | string;
 }
 
 export interface BuilderParams extends DescribeAPIParams {

@@ -15,6 +15,8 @@ interface BlueprintFragmentRequest {
 }
 
 export default class BlueprintFragment {
+  static totalEndpoints = 0;
+  static totalGroups = 0;
   static apiName(name: string, description: string) {
     let str = 'FORMAT: 1A\n';
     str += `# ${name}\n${description}\n`;
@@ -25,6 +27,7 @@ export default class BlueprintFragment {
     let str = '';
     Object.entries(groupTargets).forEach(([groupName, _groupTargets]) => {
       str += `# Group ${groupName}\n`;
+      BlueprintFragment.totalGroups++;
       Object.entries(_groupTargets).forEach(([pathName, _requestTargets]) => {
         const { requestGroup } = BlueprintFragment.getMeta(_requestTargets[0]);
         str += `## ${requestGroup} [${pathName}]\n`;
@@ -34,6 +37,7 @@ export default class BlueprintFragment {
             { response, headers, body, name, method, responses, description },
             _reqTarget.name,
           );
+          BlueprintFragment.totalEndpoints++;
           str += build;
         });
       });
