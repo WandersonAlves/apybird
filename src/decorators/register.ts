@@ -12,4 +12,11 @@ export default abstract class ClassRegister {
   static getAll() {
     return this.classes;
   }
+
+  /**
+   * Reset the class count. Used internally in unit tests
+   */
+  static reset() {
+    this.classes = [];
+  }
 }

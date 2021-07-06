@@ -1,25 +1,57 @@
-import { expect } from "chai";
-import { DescribeRequest } from "../src"
-import ClassRegister from "../src/decorators/register";
+import { expect } from 'chai';
+import { DescribeRequest } from '../src';
+import ClassRegister from '../src/decorators/register';
 
 class TestSubject {}
 class TestSubject2 {}
 
+const decorateClasses = () => {
+  DescribeRequest({
+    group: 'Auth',
+    method: 'POST',
+    name: 'Authenticate User',
+    path: '/v1/auth/login',
+    requestGroup: 'Login',
+    headers: {
+      'x-random': 'string',
+    },
+    response: {
+      data: [],
+    },
+  })(TestSubject);
+  DescribeRequest({
+    group: 'Things',
+    method: 'GET',
+    name: 'Get Various Things',
+    path: '/v1/things',
+    requestGroup: 'VariousThings',
+    headers: {
+      'x-random': 'string',
+    },
+    response: {
+      data: [],
+    },
+    responses: {
+      200: {
+        status: 'OK',
+      },
+      400: {
+        status: 'NOT OK DUDE',
+      },
+      500: {
+        status: 'DEFINITIVELY NOT OK',
+      },
+    },
+  })(TestSubject2);
+};
+
 describe('Decorators', () => {
+  beforeEach(() => {
+    ClassRegister.reset();
+    decorateClasses();
+  });
+
   it('Should add metadata', () => {
-    DescribeRequest({
-      group: 'Auth',
-      method: 'POST',
-      name: 'Authenticate User',
-      path: '/v1/auth/login',
-      requestGroup: 'Login',
-      headers: {
-        'x-random': 'string',
-      },
-      response: {
-        data: [],
-      },
-    })(TestSubject);
     expect(Reflect.getMetadata('Group', TestSubject)).equals('Auth');
     expect(Reflect.getMetadata('Method', TestSubject)).equals('POST');
     expect(Reflect.getMetadata('Name', TestSubject)).equals('Authenticate User');
@@ -34,30 +66,6 @@ describe('Decorators', () => {
   });
 
   it('Should add more metadata', () => {
-    DescribeRequest({
-      group: 'Things',
-      method: 'GET',
-      name: 'Get Various Things',
-      path: '/v1/things',
-      requestGroup: 'VariousThings',
-      headers: {
-        'x-random': 'string',
-      },
-      response: {
-        data: [],
-      },
-      responses: {
-        200: {
-          status: 'OK',
-        },
-        400: {
-          status: 'NOT OK DUDE',
-        },
-        500: {
-          status: 'DEFINITIVELY NOT OK',
-        },
-      },
-    })(TestSubject2);
     expect(Reflect.getMetadata('Group', TestSubject2)).equals('Things');
     expect(Reflect.getMetadata('Method', TestSubject2)).equals('GET');
     expect(Reflect.getMetadata('Name', TestSubject2)).equals('Get Various Things');
@@ -80,11 +88,10 @@ describe('Decorators', () => {
     expect(Reflect.getMetadata('Headers', TestSubject2)).deep.equals({
       'x-random': 'string',
     });
-  })
+  });
 
   it('Should get all decorated classes', () => {
     const classes = ClassRegister.getAll();
-
     expect(classes).length(2);
-  })
-})
+  });
+});

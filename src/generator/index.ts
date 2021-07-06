@@ -23,7 +23,6 @@ import { DescribeAPIParams, GroupedByPath } from '../interfaces';
 export const GenerateAPIBlueprint = (params: DescribeAPIParams, ...targets: (new () => any)[]) => {
   const groupTargets: GroupedByPath = {};
   const { name, description } = params;
-  const formatedDescription = typeof description === 'function' ? description(BlueprintFragment.totalEndpoints, BlueprintFragment.totalGroups) : description;
 
   targets.forEach(target => {
     const { group, path } = BlueprintFragment.getMeta(target);
@@ -37,8 +36,14 @@ export const GenerateAPIBlueprint = (params: DescribeAPIParams, ...targets: (new
     groupTargets[group][path].push(target);
   });
 
-  let str = BlueprintFragment.apiName(name, formatedDescription);
-  str += BlueprintFragment.apiGroups(groupTargets);
+  let str = BlueprintFragment.apiGroups(groupTargets);
+
+  const formatedDescription =
+    typeof description === 'function'
+      ? description(BlueprintFragment.totalEndpoints, BlueprintFragment.totalGroups)
+      : description;
+
+  str = BlueprintFragment.apiName(name, formatedDescription) + str;
 
   return {
     toString: () => str,

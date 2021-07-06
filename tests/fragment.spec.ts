@@ -152,7 +152,7 @@ describe('Fragments', () => {
       const result = BlueprintFragment.apiName('Best API', 'mocha + chai = <3');
       expect(result).contains('FORMAT: 1A');
       expect(result).contains('# Best API\nmocha + chai = <3');
-    })
+    });
   })
 
   describe('ApiGroups', () => {
