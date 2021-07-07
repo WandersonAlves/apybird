@@ -10,7 +10,7 @@ interface BlueprintFragmentRequest {
   response?: Keys;
   responses?: {
     [k: number]: any;
-  },
+  };
   description?: string;
 }
 
@@ -25,23 +25,31 @@ export default class BlueprintFragment {
 
   static apiGroups(groupTargets: GroupedByPath) {
     let str = '';
-    Object.entries(groupTargets).forEach(([groupName, _groupTargets]) => {
-      str += `# Group ${groupName}\n`;
-      BlueprintFragment.totalGroups++;
-      Object.entries(_groupTargets).forEach(([pathName, _requestTargets]) => {
-        const { requestGroup } = BlueprintFragment.getMeta(_requestTargets[0]);
-        str += `## ${requestGroup} [${pathName}]\n`;
-        _requestTargets.forEach(_reqTarget => {
-          const { method, name, body, headers, response, responses, description } = BlueprintFragment.getMeta(_reqTarget);
-          const build = BlueprintFragment.request(
-            { response, headers, body, name, method, responses, description },
-            _reqTarget.name,
-          );
-          BlueprintFragment.totalEndpoints++;
-          str += build;
-        });
+    Object.entries(groupTargets)
+      .sort(([a], [b]) => {
+        return a < b ? -1 : a > b ? 1 : 0;
+      })
+      .forEach(([groupName, _groupTargets]) => {
+        str += `# Group ${groupName}\n`;
+        BlueprintFragment.totalGroups++;
+        Object.entries(_groupTargets)
+          .sort(([a], [b]) => {
+            return a < b ? -1 : a > b ? 1 : 0;
+          })
+          .forEach(([pathName, _requestTargets]) => {
+            const { requestGroup } = BlueprintFragment.getMeta(_requestTargets[0]);
+            str += `## ${requestGroup} [${pathName}]\n`;
+            _requestTargets.forEach(_reqTarget => {
+              const { method, name, body, headers, response, responses, description } = BlueprintFragment.getMeta(_reqTarget);
+              const build = BlueprintFragment.request(
+                { response, headers, body, name, method, responses, description },
+                _reqTarget.name,
+              );
+              BlueprintFragment.totalEndpoints++;
+              str += build;
+            });
+          });
       });
-    });
     return str;
   }
 
@@ -71,11 +79,12 @@ export default class BlueprintFragment {
     };
   }
 
-  private static request({ method, name, body, headers, response, responses, description }: BlueprintFragmentRequest, className: string) {
+  private static request(blueprintFragment: BlueprintFragmentRequest, className: string) {
+    const { method, name, body, headers, response, responses, description } = blueprintFragment;
     let requestFragment = '';
     requestFragment += `### ${method} ${name} [${method}]\n`;
     if (description) {
-      requestFragment += `${description}\n`
+      requestFragment += `${description}\n`;
     }
     requestFragment += '+ Request (application/json)\n';
     if (body) {
@@ -91,14 +100,12 @@ export default class BlueprintFragment {
     if (response && !responses) {
       requestFragment += '+ Response 200 (application/json)';
       requestFragment += `\n${jsonString(response)}`;
-    }
-    else if (responses) {
+    } else if (responses) {
       Object.entries(responses).forEach(([statusCode, resp]) => {
         requestFragment += `+ Response ${statusCode} (application/json)`;
         requestFragment += `\n${jsonString(resp)}`;
-      })
-    }
-    else {
+      });
+    } else {
       throw new Error(`Neither "response" or "responses" object provided into ${className} class`);
     }
     return requestFragment;
