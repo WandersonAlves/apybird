@@ -27,7 +27,7 @@ export interface DescribeRequestParams<H = unknown, B = unknown, R = unknown> {
    */
   response?: R;
   /**
-   * Responses object. The keys of the object are the status code
+   * Responses object. The keys of the object are the status code.
    *
    * @example
    * {
@@ -40,7 +40,7 @@ export interface DescribeRequestParams<H = unknown, B = unknown, R = unknown> {
    * }
    */
   responses?: {
-    [k: number]: any;
+    [Property in keyof R]: R[Property];
   };
   /**
    * Describe the endpoint

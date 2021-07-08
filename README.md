@@ -122,7 +122,7 @@ Where should `apybird` place your documentation
 
 #### pattern - `string` (**OPTIONAL**)
 
-Change the default pattern (*Case.ts) to something else. The command that will use this is `find . -name '${details.pattern || '*Case.ts'}'` and can be found on `src/builder/index.ts`.
+Change the default pattern (*Case.ts) to something else. The command that will use this is `find . -name '${details.pattern || '*Case.ts'}'`and can be found on`src/builder/index.ts`.
 
 ```typescript
 BuildApybirdDoc({
@@ -157,31 +157,46 @@ Name of the request. Translates to `### GET <value> [GET]`
 
 Group of request in case multiple methods points to the same route. Translates to `## <value> [/v1/things]`
 
-#### headers - `[k: string]: string` (**OPTIONAL**)
+#### headers - `H` (**OPTIONAL**)
 
 A object that represents the headers of the endpoint. Uses the `H` generic
 
-#### body - `[k: string]: any` (**OPTIONAL**)
+#### body - `B` (**OPTIONAL**)
 
 A object that represents the body of the endpoint. Uses the `B` generic
 
-#### response - `any` (**OPTIONAL**)
+#### response - `R` (**OPTIONAL**)
 
 The default 200 response. If you use `responses`, it'll be used instead of this. Uses the `R` generic
 
-#### responses - `[k: number]: any` (**OPTIONAL**)
+#### responses - `[Property in keyof R]: R[Property]` (**OPTIONAL**)
 
 Responses object. The keys of the object are the status code
 
-```js
-{
-  200: {
-    status: 'OK'
-  }
-  500: {
-    status: 'NOT OK'
-  }
-}
+```ts
+type ReturnType = { status: string };
+@DescribeRequest<any, any, { 200: ReturnType; 400: ReturnType; 500: ReturnType }>({
+  group: 'Things',
+  method: 'GET',
+  name: 'Get Various Things',
+  path: '/v1/things',
+  requestGroup: 'VariousThings',
+  headers: {
+    'x-random': 'string',
+  },
+  responses: {
+    200: {
+      status: 'OK',
+    },
+    400: {
+      status: 'NOT OK DUDE',
+    },
+    500: {
+      status: 'DEFINITIVELY NOT OK',
+    },
+  },
+})
+class TestSubject {}
 ```
 
 #### description: `string` (**OPTIONAL**)
@@ -222,7 +237,7 @@ You can fix this by separating the `Range` function into another file that not i
 
 ## TODO
 
-- [X] Unit tests
+- [x] Unit tests
 - [ ] Documentation on code and better markdown docs
 - [ ] Nice logo?
 - [ ] Cover more api blueprint syntax (query and params of a endpoint)
