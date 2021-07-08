@@ -2,14 +2,14 @@ import 'reflect-metadata';
 import { GroupedByPath, Keys } from '../interfaces';
 import { jsonString } from '../utils';
 
-interface BlueprintFragmentRequest {
+interface BlueprintFragmentRequest<B, H, R> {
   method: string;
   name: string;
-  body?: Keys;
-  headers?: Keys;
-  response?: Keys;
+  body?: B;
+  headers?: H;
+  response?: R;
   responses?: {
-    [k: number]: any;
+    [Property in keyof R]: R[Property];
   };
   description?: string;
 }
@@ -53,16 +53,16 @@ export default class BlueprintFragment {
     return str;
   }
 
-  static getMeta(target: new () => any) {
+  static getMeta<H,B,R>(target: new () => any) {
     const group: string = Reflect.getMetadata('Group', target);
     const name: string = Reflect.getMetadata('Name', target);
     const path: string = Reflect.getMetadata('Path', target);
     const method: string = Reflect.getMetadata('Method', target);
-    const body: Keys = Reflect.getMetadata('Body', target);
-    const headers: Keys = Reflect.getMetadata('Headers', target);
-    const response: Keys = Reflect.getMetadata('Response', target);
+    const body: B = Reflect.getMetadata('Body', target);
+    const headers: H = Reflect.getMetadata('Headers', target);
+    const response: R = Reflect.getMetadata('Response', target);
     const requestGroup: string = Reflect.getMetadata('RequestGroup', target);
-    const responses: string = Reflect.getMetadata('Responses', target);
+    const responses: R = Reflect.getMetadata('Responses', target);
     const description: string = Reflect.getMetadata('Description', target);
 
     return {
@@ -79,7 +79,7 @@ export default class BlueprintFragment {
     };
   }
 
-  private static request(blueprintFragment: BlueprintFragmentRequest, className: string) {
+  private static request<H, B, R>(blueprintFragment: BlueprintFragmentRequest<H, B, R>, className: string) {
     const { method, name, body, headers, response, responses, description } = blueprintFragment;
     let requestFragment = '';
     requestFragment += `### ${method} ${name} [${method}]\n`;
@@ -97,10 +97,10 @@ export default class BlueprintFragment {
         .map(([key, value]) => ` ${key}:${value}`)
         .join('\n')}\n`;
     }
-    if (response && !responses) {
+    if (response !== undefined && response !== null && !responses) {
       requestFragment += '+ Response 200 (application/json)';
       requestFragment += `\n${jsonString(response)}`;
-    } else if (responses) {
+    } else if (typeof responses === 'object') {
       Object.entries(responses).forEach(([statusCode, resp]) => {
         requestFragment += `+ Response ${statusCode} (application/json)`;
         requestFragment += `\n${jsonString(resp)}`;

@@ -145,6 +145,19 @@ describe('Fragments', () => {
         ),
       ).to.throw(/Neither "response" or "responses" object provided into TestSubject class/);
     });
+
+    it("Should not throw a error when 'response' is a empty string", () => {
+      expect(() =>
+        BlueprintFragment['request'](
+          {
+            method: 'GET',
+            name: 'Testing Fragments',
+            response: ''
+          },
+          'TestSubject',
+        ),
+      ).to.not.throw();
+    });
   });
 
   describe('ApiName', () => {
