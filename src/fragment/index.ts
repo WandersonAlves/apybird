@@ -1,13 +1,16 @@
 import 'reflect-metadata';
-import { GroupedByPath, Keys } from '../interfaces';
+import { BlueprintParametersSchema, GroupedByPath, Keys } from '../interfaces';
 import { jsonString } from '../utils';
 
-interface BlueprintFragmentRequest<B, H, R> {
+interface BlueprintFragmentRequest<B, H, R, P> {
   method: string;
   name: string;
   body?: B;
   headers?: H;
   response?: R;
+  parameters?: {
+    [Prop in keyof P]: BlueprintParametersSchema;
+  };
   responses?: {
     [Property in keyof R]: R[Property];
   };
@@ -40,11 +43,7 @@ export default class BlueprintFragment {
             const { requestGroup } = BlueprintFragment.getMeta(_requestTargets[0]);
             str += `## ${requestGroup} [${pathName}]\n`;
             _requestTargets.forEach(_reqTarget => {
-              const { method, name, body, headers, response, responses, description } = BlueprintFragment.getMeta(_reqTarget);
-              const build = BlueprintFragment.request(
-                { response, headers, body, name, method, responses, description },
-                _reqTarget.name,
-              );
+              const build = BlueprintFragment.request(BlueprintFragment.getMeta(_reqTarget), _reqTarget.name);
               BlueprintFragment.totalEndpoints++;
               str += build;
             });
@@ -53,7 +52,7 @@ export default class BlueprintFragment {
     return str;
   }
 
-  static getMeta<H,B,R>(target: new () => any) {
+  static getMeta<H, B, R, P>(target: new () => any) {
     const group: string = Reflect.getMetadata('Group', target);
     const name: string = Reflect.getMetadata('Name', target);
     const path: string = Reflect.getMetadata('Path', target);
@@ -64,6 +63,7 @@ export default class BlueprintFragment {
     const requestGroup: string = Reflect.getMetadata('RequestGroup', target);
     const responses: R = Reflect.getMetadata('Responses', target);
     const description: string = Reflect.getMetadata('Description', target);
+    const parameters: P = Reflect.getMetadata('Parameters', target);
 
     return {
       group,
@@ -76,12 +76,29 @@ export default class BlueprintFragment {
       requestGroup,
       responses,
       description,
+      parameters,
     };
   }
 
-  private static request<H, B, R>(blueprintFragment: BlueprintFragmentRequest<H, B, R>, className: string) {
-    const { method, name, body, headers, response, responses, description } = blueprintFragment;
+  private static request<H, B, R, P>(blueprintFragment: BlueprintFragmentRequest<H, B, R, P>, className: string) {
+    const { method, name, body, headers, response, responses, description, parameters } = blueprintFragment;
     let requestFragment = '';
+    if (parameters) {
+      requestFragment += '+ Parameters\n';
+      requestFragment += `${Object.entries(parameters)
+        .map(
+          ([key, value]: [key: string, value: BlueprintParametersSchema]) =>
+            {
+              const defaultValue = value.defaultValue || '';
+              const type = value.type;
+              const optional = value.optional ? `,optional` : '';
+              const description = value.description;
+              const typeAndOptional = `(${type}${optional})`;
+              return `    + ${key}: ${defaultValue} ${typeAndOptional} - ${description}`;
+            },
+        )
+        .join('\n')}\n`;
+    }
     requestFragment += `### ${method} ${name} [${method}]\n`;
     if (description) {
       requestFragment += `${description}\n`;

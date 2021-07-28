@@ -8,7 +8,7 @@ import ClassRegister from './register';
  * Use `GenerateAPIBlueprint` to create a apib string or file
  *
  */
-export const DescribeRequest = <H = unknown, B = unknown, R = unknown>({
+export const DescribeRequest = <H = unknown, B = unknown, R = unknown, P = unknown>({
   group,
   path,
   method,
@@ -18,8 +18,9 @@ export const DescribeRequest = <H = unknown, B = unknown, R = unknown>({
   name,
   requestGroup,
   responses,
-  description
-}: DescribeRequestParams<H, B, R>) => {
+  description,
+  parameters
+}: DescribeRequestParams<H, B, R, P>) => {
   return (target: any) => {
     ClassRegister.addClass(target);
     Reflect.defineMetadata('Group', group, target);
@@ -32,6 +33,7 @@ export const DescribeRequest = <H = unknown, B = unknown, R = unknown>({
     Reflect.defineMetadata('Name', name, target);
     Reflect.defineMetadata('RequestGroup', requestGroup, target);
     Reflect.defineMetadata('Description', description, target);
+    Reflect.defineMetadata('Parameters', parameters, target);
     return target;
   };
 };

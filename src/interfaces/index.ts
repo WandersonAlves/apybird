@@ -1,4 +1,4 @@
-export interface DescribeRequestParams<H = unknown, B = unknown, R = unknown> {
+export interface DescribeRequestParams<H = unknown, B = unknown, R = unknown, P = unknown> {
   /**
    * Group of request. Translates to `# Group <value>`
    */
@@ -42,9 +42,19 @@ export interface DescribeRequestParams<H = unknown, B = unknown, R = unknown> {
   responses?: {
     [Property in keyof R]: R[Property];
   };
+  parameters?: {
+    [Prop in keyof P]: BlueprintParametersSchema
+  };
   /**
    * Describe the endpoint
    */
+  description?: string;
+}
+
+export interface BlueprintParametersSchema {
+  type: 'string' | 'number';
+  defaultValue?: string;
+  optional?: true;
   description?: string;
 }
 

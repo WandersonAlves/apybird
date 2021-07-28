@@ -7,9 +7,21 @@ import BlueprintFragment from '../src/fragment';
   group: 'TestGroup',
   method: 'GET',
   name: 'Clients',
-  path: '/v1/test',
+  path: '/v1/test/{id}{?jwtToken}',
   requestGroup: 'TestClients',
   response: { hello: 'test' },
+  parameters: {
+    jwtToken: {
+      type: 'string',
+      description: 'A bearer token',
+      optional: true,
+      defaultValue: 'hash',
+    },
+    id: {
+      type: 'number',
+      description: 'ID of user',
+    },
+  },
 })
 class TestSubject {}
 
